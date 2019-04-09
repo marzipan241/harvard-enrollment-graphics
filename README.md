@@ -1,2 +1,2 @@
-# harvard-enrollment-graphics
-A small glimpse into Harvard University course enrollment
+# Harvard Enrollment Graphics
+A little glimpse into Harvard University course enrollment
