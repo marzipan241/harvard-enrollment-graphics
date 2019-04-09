@@ -21,10 +21,10 @@ library(viridis)
 
 ```{r download, echo=FALSE, include=FALSE}
 
-# Read in ps_3_enrollment.xlsx spreadsheet
+# Read in spreadsheet for 2019 Spring course enrollment data
 # Clean data, set resulting dataframe as "x"
 
-x <- read_xlsx("ps_3_enrollment.xlsx", skip = 3) %>% 
+x <- read_xlsx("2019_spring_enrollment.xlsx", skip = 3) %>% 
   janitor::clean_names() %>% 
   
   # Filter for existing courses
