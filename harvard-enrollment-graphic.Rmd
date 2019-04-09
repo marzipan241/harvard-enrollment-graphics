@@ -1,0 +1,88 @@
+---
+title: "Harvard Enrollment Graphic"
+author: "Margaret Sun"
+date: "4/8/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+# Import relevant packages
+
+library(knitr)
+library(readxl)
+library(janitor)
+library(tidyverse)
+library(ggridges)
+library(viridis)
+
+```
+
+```{r download, echo=FALSE, include=FALSE}
+
+# Read in ps_3_enrollment.xlsx spreadsheet
+# Clean data, set resulting dataframe as "x"
+
+x <- read_xlsx("ps_3_enrollment.xlsx", skip = 3) %>% 
+  janitor::clean_names() %>% 
+  
+  # Filter for existing courses
+  
+  filter(!is.na(course_section_code)) %>% 
+  
+  # Filter for courses with more than 5 undergraduates 
+  
+  filter(u_grad > 5) %>% 
+  
+  # Filter for courses with a majority of undergraduates
+  
+  filter(u_grad / total > 0.5)
+
+# Print number of courses
+
+nrow(x)
+
+```
+
+```{r plot, echo=FALSE, warning=FALSE, message=FALSE}
+
+x %>%
+  
+  # Filter for two variables needed: Course Department and Total enrollment
+  
+  select(course_department, total) %>% 
+  
+  # Filter for departments in target plot
+  
+  filter(course_department %in% c("Statistics", "Mathematics", "Government", "Expository Writing", "Economics", "Computer Science")) %>% 
+  
+  # Plots total enrollment vs. course department into ridgeline plot with fill from viridis
+  
+  ggplot(mapping = aes(x = total, y = course_department)) + 
+  
+  # Creates fill of ridgeline plot, hides legend
+  
+  geom_density_ridges_gradient(show.legend = FALSE, aes(fill = ..x..)) +
+  scale_fill_viridis(option = "C") +
+  
+  # Adds title, subtitle, and caption
+  
+  labs(title = "Course Enrollments Spring 2019",
+       subtitle = "Departments vary in their typical class sizes",
+       caption = "Source: Harvard Registrar") +
+  
+  # Labels x-axis, deletes y-axis label since departments self-explanatory
+  
+  xlab("Class Size") +
+  ylab(NULL) +
+  
+  # Scales x-axis logarithmically
+  
+  scale_x_log10()
+  
+```
+
+## Acknowledgements
+
+GOV 1005: Data for illuminating the path of R
